@@ -8,6 +8,7 @@ const App = () => {
       <nav>Navbar</nav>
       <main>All Routing</main>
     </div>
+    
   )
 }
 
