@@ -14,7 +14,7 @@ const Navbar = () => {
         </form>
         </div> 
         <div className='align_center navbar_links'>
-            <a href='#' className='align_center'>Home <img src={rocket} alt='' className='link_emoji'/></a>
+            <a href=' #' className='align_center'>Home <img src={rocket} alt='' className='link_emoji'/></a>
         </div>
     </nav>
   )
