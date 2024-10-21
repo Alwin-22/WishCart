@@ -2,6 +2,12 @@ import React from 'react'
 
 import "./Navbar.css"
 import rocket from '../../assets/rocket.png'
+import star from '../../assets/glowing-star.png'
+import idButton from '../../assets/id-button.png'
+import memo from '../../assets/memo.png'
+import order from '../../assets/package.png'
+import lock from '../../assets/locked.png'
+import LinksWithIcons from './LinksWithIcons/LinksWithIcons'
 
 const Navbar = () => {
   return (
@@ -14,7 +20,16 @@ const Navbar = () => {
         </form>
         </div> 
         <div className='align_center navbar_links'>
-            <a href=' #' className='align_center'>Home <img src={rocket} alt='' className='link_emoji'/></a>
+            <LinksWithIcons title='Home' link='/' emoji={rocket}/>
+            <LinksWithIcons title='Products' link='/products' emoji={star}/>
+            <LinksWithIcons title='Login' link='/login' emoji={idButton}/>
+            <LinksWithIcons title='SignUp' link='/signup' emoji={memo}/>
+            <LinksWithIcons title='My Orders' link='/signup' emoji={order}/>
+            <LinksWithIcons title='Logout' link='/logout' emoji={lock}/>
+
+            <a href='/cart' className='align_center'>
+              Cart <p className='align_center cart_counts'>0</p>
+            </a>
         </div>
     </nav>
   )
