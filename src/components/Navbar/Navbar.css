@@ -1,6 +1,6 @@
 .navbar{
     justify-content: space-between;
-    padding: 0 40px;
+    padding: 0 10px;
     background-color: #fff;
 }
 .navbar_heading{
@@ -10,7 +10,7 @@
 }
 
 .navbar_form{
-    width:450px;
+    width:354px;
     height:40px;
     border:1px solid #cdcdcd;
     border-radius: 5px;
@@ -37,12 +37,28 @@
     cursor:pointer;
 }
 .navbar_links{
-    font-size:20px;   
+    font-size:20px;  
 }
-.navbar_links > a{
-    margin:15px;
-}
-.link_emoji{
-    width: 25px;
+.cart_counts{
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    background-color: #6457f9;
+    color: #fff;
+    font-size: 15px;
     margin-left: 5px;
+}
+
+.navbar_links > a{
+    margin:10px;
+    padding: 5px;
+}
+
+a{
+    font-size: inherit;
+    font-weight: 500;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
 }
