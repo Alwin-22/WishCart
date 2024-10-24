@@ -2,9 +2,11 @@ import React from 'react'
 
 import './LinksWithIcons.css'
 
-const LinksWithIcons = ({title, link, emoji}) => {
+const LinksWithIcons = ({title, link, emoji,sidebar}) => {
   return (
-    <a href={link} className='align_center'>{title} 
+    <a href={link} className={sidebar ? 'align_center sidebar_link' : 
+      'align_center'
+    }>{title} 
     <img src={emoji} alt='' className='link_emoji'/></a>
   )
 }

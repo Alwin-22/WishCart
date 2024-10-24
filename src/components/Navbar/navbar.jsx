@@ -7,7 +7,7 @@ import idButton from '../../assets/id-button.png'
 import memo from '../../assets/memo.png'
 import order from '../../assets/package.png'
 import lock from '../../assets/locked.png'
-import LinksWithIcons from './LinksWithIcons/LinksWithIcons'
+import LinksWithIcons from './../LinksWithIcons/LinksWithIcons'
 
 const Navbar = () => {
   return (
@@ -24,7 +24,7 @@ const Navbar = () => {
             <LinksWithIcons title='Products' link='/products' emoji={star}/>
             <LinksWithIcons title='Login' link='/login' emoji={idButton}/>
             <LinksWithIcons title='SignUp' link='/signup' emoji={memo}/>
-            <LinksWithIcons title='My Orders' link='/signup' emoji={order}/>
+            <LinksWithIcons title='My Orders' link='/my_orders' emoji={order}/>
             <LinksWithIcons title='Logout' link='/logout' emoji={lock}/>
 
             <a href='/cart' className='align_center'>

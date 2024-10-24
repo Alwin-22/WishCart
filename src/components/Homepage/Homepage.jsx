@@ -1,7 +1,7 @@
 import React from 'react'
 
-import iphone from '../../../assets/iphone-14-pro.webp'
-import mac from '../../../assets/mac-system-cut.jpg'
+import iphone from '../../assets/iphone-14-pro.webp'
+import mac from '../../assets/mac-system-cut.jpg'
 import HeroSection from './HeroSection'
 import FeaturedProducts from './FeaturedProducts'
 

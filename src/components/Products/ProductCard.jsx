@@ -1,9 +1,9 @@
 import React from 'react'
 
 import './ProductCard.css'
-import iphone from '../../../assets/iphone-14-pro.webp'
-import star from '../../../assets/white-star.png'
-import basket from '../../../assets/basket.png'
+import iphone from './../../assets/iphone-14-pro.webp'
+import star from './../../assets/white-star.png'
+import basket from './../../assets/basket.png'
 
 const ProductCard = () => {
   return (
@@ -12,7 +12,7 @@ const ProductCard = () => {
             <a href="product/1"><img src={iphone} alt='product image'/></a>        
         </div>
         <div className="product_deatils">
-            <h3 className="product_price">$999</h3>
+            <h3 className="product_price">$5</h3>
             <p className="product_title">iPhone 16 Pro</p>
 
         <footer className="align_center product_info_footer">
