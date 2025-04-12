@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import {z} from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import user from "./../assets/user.webp";
+import user from "./../../assets/user.webp";
 import "./SignupPage.css";
 import { useState } from "react";
 
