@@ -25,9 +25,12 @@
     font-weight: 600;
     margin-bottom: 3px;
 }
-
+input{
+    height:30px;
+    padding:10px;
+}
 .form_text_input{
-    height:35px;
+    height:50px;
     padding: 0 8px;
     font-size: 17px;
     font-weight: 500;

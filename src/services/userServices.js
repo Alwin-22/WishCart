@@ -1,0 +1,33 @@
+import apiClient from "../Utils/api-client";
+import Logout from "./../components/Authentication/Logout";
+import { jwtDecode } from "jwt-decode";
+
+const tokenName = "token";
+
+export async function signUp(user, profile) {
+  const body = new FormData();
+  body.append("name", user.name);
+  body.append("email", user.email);
+  body.append("password", user.password);
+  body.append("deliveryAddress", user.deliveryAddress);
+  body.append("profilePic", profile);
+
+  const { data } = await apiClient.post("/user/signup", body);
+  localStorage.setItem(tokenName, data.token);
+}
+
+export async function login(user) {
+  const { data } = await apiClient.post("/user/login", user);
+  localStorage.setItem(tokenName, data.token);
+}
+export function Logout() {
+  localStorage.removeItem("token ");
+}
+export function getUser() {
+  try {
+    const jwt = localStorage.getItem(tokenName);
+    return jwtDecode(jwt);
+  } catch (error) {
+    return null;
+  }
+}
