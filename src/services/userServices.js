@@ -2,6 +2,7 @@ import apiClient from "../Utils/api-client";
 import Logout from "./../components/Authentication/Logout";
 import { jwtDecode } from "jwt-decode";
 
+
 const tokenName = "token";
 
 export async function signUp(user, profile) {
@@ -20,8 +21,8 @@ export async function login(user) {
   const { data } = await apiClient.post("/user/login", user);
   localStorage.setItem(tokenName, data.token);
 }
-export function Logout() {
-  localStorage.removeItem("token ");
+export function logout() {
+  localStorage.removeItem("token");
 }
 export function getUser() {
   try {
@@ -30,4 +31,7 @@ export function getUser() {
   } catch (error) {
     return null;
   }
+}
+export function getJWt() {
+  return localStorage.getItem(tokenName);
 }

@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 
 const Logout = () => {
-    useEffect(() => {
-        Logout();
+  useEffect(() => {
+    localStorage.removeItem("token");
     window.location = "/";
   }, []);
+
   return null;
 };
 

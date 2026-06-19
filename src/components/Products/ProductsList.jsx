@@ -23,7 +23,7 @@ const ProductsList = () => {
       },
       fetchingRef: isFetchingRef, // ✅ Now it's defined!
     }),
-    [category, page]
+    [category, page],
   );
 
   const { data, error, isLoading } = useData("/products", config);
@@ -44,7 +44,9 @@ const ProductsList = () => {
         document.documentElement;
       if (
         scrollTop + clientHeight >= scrollHeight - 1 &&
-        !isFetchingRef.current && data && page < data.totalPages
+        !isFetchingRef.current &&
+        data &&
+        page < data.totalPages
       ) {
         isFetchingRef.current = true;
         setPage((prev) => prev + 1);
@@ -77,16 +79,7 @@ const ProductsList = () => {
 
         {data?.products &&
           data.products.map((product) => (
-            <ProductCard
-              key={product._id}
-              id={product._id}
-              image={product.images[0]}
-              price={product.price}
-              title={product.title}
-              rating={product.reviews.rate}
-              ratingCounts={product.reviews.counts}
-              stocks={product.stock}
-            />
+            <ProductCard key={product._id} product={product} />
           ))}
       </div>
       {/* {data && (

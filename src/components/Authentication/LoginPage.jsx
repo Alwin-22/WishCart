@@ -5,7 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { jwtDecode } from "jwt-decode";
 
 import "./LoginPage.css";
-import { login } from "../../services/userServices";
+import { getUser, login } from "../../services/userServices";
+import { useLocation, Navigate } from "react-router-dom";
 
 const schema = z.object({
   email: z.string().email({ message: "PLEASE ENTER VALID EMAIL" }).min(3),
@@ -15,6 +16,9 @@ const schema = z.object({
 });
 
 const LoginPage = ({ setUser }) => {
+  const location = useLocation();
+  console.log("Login Location", location);
+
   const {
     register,
     handleSubmit,
@@ -27,14 +31,17 @@ const LoginPage = ({ setUser }) => {
       await login(formData);
       // const decodedUser = jwtDecode(data.token);
       // setUser(decodedUser);
-
-      window.location = "/";
+      const { state } = location;
+      window.location = state ? state.from : "/";
     } catch (err) {
       if (err.response && err.response.status === 400) {
         setFormError(err.response.data.message);
       }
     }
   };
+  if (getUser()) {
+    return <Navigate to="/" />;
+  }
   return (
     <section className="align_center form_page">
       <form
