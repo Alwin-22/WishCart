@@ -42,7 +42,7 @@ const SingleProductPage = () => {
           <div className="single_product_details ">
             <h1 className="single_product_title">{product.title}</h1>
             <p className="single_product_description">{product.description}</p>
-            <p className="single_product_price">{product.price.toFixed(2)}</p>
+            <p className="single_product_price">${product.price.toFixed(2)}</p>
             {user && (
               <>
                 {" "}

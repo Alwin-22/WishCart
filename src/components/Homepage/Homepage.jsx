@@ -1,30 +1,30 @@
-import React from 'react'
+import React from "react";
 
-import iphone from '../../assets/iphone-14-pro.webp'
-import mac from '../../assets/mac-system-cut.jpg'
-import HeroSection from './HeroSection'
-import FeaturedProducts from './FeaturedProducts'
+import iphone from "../../assets/iphone-14-pro.webp";
+import mac from "../../assets/mac-system-cut.jpg";
+import HeroSection from "./HeroSection";
+import FeaturedProducts from "./FeaturedProducts";
 
 const Homepage = () => {
   return (
     <div>
-        <HeroSection 
-        title='Buy iPhone 16 Pro'
-        subtitle='Experience the power of the latest iPhone 16 with our most Pro camera ever'
-        link='/'
+      <HeroSection
+        title="Buy iPhone 16 Pro"
+        subtitle="Experience the power of the latest iPhone 16 with our most Pro camera ever"
+        link="/product/6a342e57fe68727de9067a39"
         image={iphone}
-        />
+      />
 
-        <FeaturedProducts/>
+      <FeaturedProducts />
 
-        <HeroSection 
-        title='Build the ultimate setup'
-        subtitle='You can add Studio Display and colour-matched Magic accessories to your bag after configuring your Mac mini'
-        link='/'
+      <HeroSection
+        title="Build the ultimate setup"
+        subtitle="You can add Studio Display and colour-matched Magic accessories to your bag after configuring your Mac mini"
+        link="/product/6a342e57fe68727de9067a42"
         image={mac}
-        />
+      />
     </div>
-  )
-}
+  );
+};
 
-export default Homepage
+export default Homepage;
