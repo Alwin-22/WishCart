@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useMemo, useContext, memo } from "react";
 
 import CartContext from "../../contexts/CartContext";
 import UserContext from "../../contexts/UserContext";
@@ -7,21 +7,21 @@ import Table from "./../Common/Table";
 import QuantityInput from "../SingleProduct/QuantityInput";
 import remove from "../../assets/remove.png";
 import { checkoutAPI } from "../../services/orderServices";
-import { toast } from "react-toastify"; // 🟢 Fixed potential typo path from unstyled
+import { toast } from "react-toastify"; 
 
 const CartPage = () => {
-  const [subTotal, setSubTotal] = useState(0);
+  
   const user = useContext(UserContext);
 
   // 🟢 1. Extracted 'setCart' from context so it is defined for the checkout function
   const { cart, removeFromCart, updateCart, setCart } = useContext(CartContext);
 
-  useEffect(() => {
+  const subTotal = useMemo(() => {
     let total = 0;
     cart.forEach((item) => {
       total += item.product.price * item.quantity;
     });
-    setSubTotal(total);
+    return total;
   }, [cart]);
 
   const checkout = () => {
@@ -102,4 +102,4 @@ const CartPage = () => {
   );
 };
 
-export default CartPage;
+export default memo(CartPage);

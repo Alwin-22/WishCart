@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { memo, useContext } from "react";
 
 import "./ProductCard.css";
 import iphone from "./../../assets/iphone-14-pro.webp";
@@ -48,4 +48,4 @@ const ProductCard = ({ product }) => {
   );
 };
 
-export default ProductCard;
+export default memo(ProductCard);

@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useReducer } from "react";
 import { ToastContainer, toast } from "react-toastify";
 
 import UserContext from "./contexts/UserContext";
 import "./App.css";
 import Navbar from "./components/Navbar/navbar";
 import Routing from "./components/Routing/Routing";
-import { date } from "zod";
 import { getJWt, getUser } from "./services/userServices";
 import setAuthToken from "./Utils/setAuthToken";
 import {
@@ -18,122 +17,120 @@ import {
 import "react-toastify/dist/ReactToastify.css";
 import CartContext from "./contexts/CartContext";
 
+// 🟢 Import the new reducer file (adjust relative path if necessary)
+import cartReducer from "./reducers/cartReducer";
+
 setAuthToken(getJWt());
 
 const App = () => {
   const [user, setUser] = useState(null);
-  const [cart, setCart] = useState([]);
 
+  // 🟢 Wire the imported reducer directly into the hook configuration
+  const [cart, dispatch] = useReducer(cartReducer, []);
+
+  // Sync Initial LocalStorage Cart State On Mount
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
     if (storedCart) {
-      setCart(JSON.parse(storedCart));
+      dispatch({ type: "SET_CART", payload: JSON.parse(storedCart) });
     }
   }, []);
 
+  // Persist Cart Changes Automatically to LocalStorage
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
+  // Authenticate User Session & Monitor Token Expiry
   useEffect(() => {
     try {
       const jwtUser = getUser();
       if (Date.now() >= jwtUser.exp * 1000) {
         localStorage.removeItem("token");
-        location.reload();
+        window.location.reload();
       } else {
         setUser(jwtUser);
       }
     } catch (error) {}
   }, []);
 
-  const addToCart = (product, quantity) => {
-    setCart((prevCart) => {
-      const productId = product._id;
+  // Add Items to Cart
+  const addToCart = useCallback((product, quantity) => {
+    dispatch({ type: "ADD_TO_CART", payload: { product, quantity } });
 
-      const existingItem = prevCart.find(
-        (item) => item.product._id === productId,
-      );
-
-      if (existingItem) {
-        // update quantity
-        return prevCart.map((item) =>
-          item.product._id === productId
-            ? { ...item, quantity: item.quantity + quantity }
-            : item,
-        );
-      }
-
-      // add new item
-      return [...prevCart, { product, quantity }];
-    });
     addToCartAPI(product._id, quantity)
-      .then((res) => {
+      .then(() => {
         toast.success("Product Added Successfully");
       })
-      .catch((err) => {
+      .catch(() => {
         toast.error("Failed to add product");
-        setCart(cart);
       });
-  };
-  const removeFromCart = (id) => {
-    const oldCart = [...cart];
-    const newCart = oldCart.filter((item) => item.product._id !== id);
-    setCart(newCart);
+  }, []);
 
-    removeFromCartAPI(id).catch((err) => {
+  // Remove Items from Cart Instantly
+  const removeFromCart = useCallback((id) => {
+    const oldCart = JSON.parse(localStorage.getItem("cart") || "[]");
+    dispatch({ type: "REMOVE_FROM_CART", payload: { id } });
+
+    removeFromCartAPI(id).catch(() => {
       toast.error("Something went wrong!");
-      setCart(oldCart);
+      dispatch({ type: "SET_CART", payload: oldCart });
     });
-  };
+  }, []);
 
-  const updateCart = (type, id) => {
-    const oldCart = [...cart];
-    const updatedCart = [...cart];
-    const productIndex = updatedCart.findIndex(
-      (item) => item.product._id === id,
-    );
+  // Update Item Quantity with Network Rollback Handles
+  const updateCart = useCallback((type, id) => {
+    const oldCart = JSON.parse(localStorage.getItem("cart") || "[]");
+    dispatch({ type: "UPDATE_QUANTITY", payload: { type, id } });
 
     if (type === "increase") {
-      updatedCart[productIndex].quantity += 1;
-      setCart(updatedCart);
-      increaseProductAPI(id).catch((err) => {
+      increaseProductAPI(id).catch(() => {
         toast.error("Something went wrong!");
-        setCart(oldCart);
+        dispatch({ type: "SET_CART", payload: oldCart });
+      });
+    } else if (type === "decrease") {
+      decreaseProductAPI(id).catch(() => {
+        toast.error("Something went wrong!");
+        dispatch({ type: "SET_CART", payload: oldCart });
       });
     }
+  }, []);
 
-    if (type === "decrease") {
-      updatedCart[productIndex].quantity -= 1;
-      setCart(updatedCart);
-      decreaseProductAPI(id).catch((err) => {
-        toast.error("Something went wrong!");
-        setCart(oldCart);
-      });
-    }
-  };
-  const getCart = () => {
+  // Fetch Cart from Server
+  const getCart = useCallback(() => {
     getCartAPI()
       .then((res) => {
-        setCart(res.data);
+        dispatch({ type: "SET_CART", payload: res.data });
       })
-      .catch((err) => {
-        toast.error("Something went wrong!");
+      .catch(() => {
+        toast.error("Something went wrong while fetching the cart!");
       });
-  };
+  }, []);
+
   useEffect(() => {
     if (user) {
       getCart();
     }
-  }, [user]);
+  }, [user, getCart]);
+
+  // Wrapper function to match standard context API specifications
+  const setCartWrapper = useCallback((newCartArray) => {
+    dispatch({ type: "SET_CART", payload: newCartArray });
+  }, []);
+
   return (
     <UserContext.Provider value={user}>
       <CartContext.Provider
-        value={{ cart, addToCart, removeFromCart, updateCart, setCart }}
+        value={{
+          cart,
+          addToCart,
+          removeFromCart,
+          updateCart,
+          setCart: setCartWrapper,
+        }}
       >
         <div className="App">
           <Navbar />
-
           <main>
             <ToastContainer position="bottom-right" />
             <Routing />
@@ -143,4 +140,5 @@ const App = () => {
     </UserContext.Provider>
   );
 };
+
 export default App;
