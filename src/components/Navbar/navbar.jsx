@@ -12,6 +12,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import UserContext from "../../contexts/UserContext";
 import CartContext from "../../contexts/CartContext";
 import { getSuggestionsAPI } from "./../../services/productServices";
+import { motion } from "motion/react";
 
 const Navbar = () => {
   const [search, setsearch] = useState(" ");
@@ -66,7 +67,12 @@ const Navbar = () => {
   console.log(suggestions);
 
   return (
-    <nav className="align_center navbar">
+    <motion.nav
+      className="align_center navbar"
+      initial={{ opacity: 0, y: -30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1, ease: "easeInOut" }}
+    >
       <div className="align_center">
         <h1 className="navbar_heading">CartWish</h1>
         <form className="align_center navbar_form" onSubmit={handleSubmit}>
@@ -128,7 +134,7 @@ const Navbar = () => {
           </>
         )}
       </div>
-    </nav>
+    </motion.nav>
   );
 };
 

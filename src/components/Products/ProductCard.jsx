@@ -1,16 +1,15 @@
 import React, { memo, useContext } from "react";
-
+import { NavLink } from "react-router-dom";
 import "./ProductCard.css";
-import iphone from "./../../assets/iphone-14-pro.webp";
 import star from "./../../assets/white-star.png";
 import basket from "./../../assets/basket.png";
-import { NavLink } from "react-router-dom";
-import CartContext from "../../contexts/CartContext";
 import UserContext from "../../contexts/UserContext";
+import useAddToCart from "../../hooks/cart/useAddToCart";
 
 const ProductCard = ({ product }) => {
-  const { addToCart } = useContext(CartContext);
   const user = useContext(UserContext);
+  const addToCartMutation = useAddToCart();
+
   return (
     <article className="product_card">
       <div className="product_image">
@@ -21,6 +20,7 @@ const ProductCard = ({ product }) => {
           />
         </NavLink>
       </div>
+
       <div className="product_details">
         <h3 className="product_price">${product?.price}</h3>
         <p className="product_title">{product?.title}</p>
@@ -37,7 +37,10 @@ const ProductCard = ({ product }) => {
           {product?.stock > 0 && user && (
             <button
               className="add_to_cart"
-              onClick={() => addToCart(product, 1)}
+              onClick={() =>
+                addToCartMutation.mutate({ id: product?._id, quantity: 1 })
+              }
+              disabled={addToCartMutation.isPending}
             >
               <img src={basket} alt="basket button" />
             </button>

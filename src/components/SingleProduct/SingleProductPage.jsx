@@ -15,13 +15,18 @@ const SingleProductPage = () => {
   const user = useContext(UserContext);
   const { addToCart } = useContext(CartContext);
 
-  const { data: product, error, isLoading } = useData(`/products/${id}`);
+  const {
+    data: product,
+    error,
+    isLoading,
+  } = useData(`/products/${id}`, null, ["products", id]);
   return (
     <section className="align_center single_product">
       {error && <em className="form_error">{error}</em>}
       {isLoading && <Loader />}
       {product && (
         <>
+          ,null
           <div className="align_center">
             <div className="single_product_thumbnails">
               {product.images.map((image, index) => (
