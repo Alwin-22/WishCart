@@ -1,4 +1,4 @@
-import React, { useMemo, useContext, memo } from "react";
+import React, { useContext } from "react";
 
 import CartContext from "../../contexts/CartContext";
 import UserContext from "../../contexts/UserContext";
@@ -7,22 +7,21 @@ import Table from "./../Common/Table";
 import QuantityInput from "../SingleProduct/QuantityInput";
 import remove from "../../assets/remove.png";
 import { checkoutAPI } from "../../services/orderServices";
-import { toast } from "react-toastify"; 
+import { toast } from "react-toastify";
 
 const CartPage = () => {
-  
   const user = useContext(UserContext);
 
   // 🟢 1. Extracted 'setCart' from context so it is defined for the checkout function
   const { cart, removeFromCart, updateCart, setCart } = useContext(CartContext);
 
-  const subTotal = useMemo(() => {
+  const subTotal = () => {
     let total = 0;
     cart.forEach((item) => {
       total += item.product.price * item.quantity;
     });
     return total;
-  }, [cart]);
+  };
 
   const checkout = () => {
     const oldCart = [...cart];
@@ -61,7 +60,7 @@ const CartPage = () => {
                   quantity={quantity}
                   stock={product.stock}
                   setQuantity={updateCart}
-                  inCart={true} 
+                  inCart={true}
                   productId={product._id}
                 />
               </td>
@@ -83,11 +82,11 @@ const CartPage = () => {
         <tbody>
           <tr>
             <td>Subtotal</td>
-            <td>${subTotal}</td>
+            <td>${subTotal()}</td>
           </tr>
           <tr>
             <td>Shipping Charge</td>
-            <td>${subTotal > 0 ? 5 : 0}</td>
+            <td>${subTotal() > 0 ? 5 : 0}</td>
           </tr>
           <tr className="cart_bill_final">
             <td>Total</td>
@@ -102,4 +101,4 @@ const CartPage = () => {
   );
 };
 
-export default memo(CartPage);
+export default CartPage;

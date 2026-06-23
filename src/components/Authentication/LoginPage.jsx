@@ -17,7 +17,6 @@ const schema = z.object({
 
 const LoginPage = ({ setUser }) => {
   const location = useLocation();
-  console.log("Login Location", location);
 
   const {
     register,

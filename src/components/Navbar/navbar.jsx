@@ -64,7 +64,6 @@ const Navbar = () => {
     }, 300);
     return () => clearTimeout(delaySuggestions);
   }, [search]);
-  console.log(suggestions);
 
   return (
     <motion.nav
@@ -74,7 +73,7 @@ const Navbar = () => {
       transition={{ duration: 1, ease: "easeInOut" }}
     >
       <div className="align_center">
-        <h1 className="navbar_heading">CartWish</h1>
+        <h1 className="navbar_heading"></h1>
         <form className="align_center navbar_form" onSubmit={handleSubmit}>
           <input
             type="text"

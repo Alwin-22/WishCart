@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useReducer } from "react";
+import React, { useEffect, useState, useReducer } from "react";
 import { ToastContainer, toast } from "react-toastify";
 
 import UserContext from "./contexts/UserContext";
@@ -21,7 +21,10 @@ setAuthToken(getJWt());
 const App = () => {
   const [user, setUser] = useState(null);
   const [cart, dispatch] = useReducer(cartReducer, []);
-  const { data: cartData, refetch } = useData("/cart", null, ["cart"]);
+
+  const { data: cartData, refetch } = useData("/cart", null, ["cart"], {
+    enabled: !!user,
+  });
 
   const addToCartMutation = useAddToCart();
   const removeFromCartMutation = useRemoveFromCart();
@@ -41,7 +44,7 @@ const App = () => {
     if (user) {
       refetch();
     }
-  }, [user]);
+  }, [user, refetch]);
 
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
@@ -57,71 +60,64 @@ const App = () => {
   useEffect(() => {
     try {
       const jwtUser = getUser();
-      if (Date.now() >= jwtUser.exp * 1000) {
-        localStorage.removeItem("token");
-        window.location.reload();
-      } else {
-        setUser(jwtUser);
+      if (jwtUser) {
+        if (Date.now() >= jwtUser.exp * 1000) {
+          localStorage.removeItem("token");
+          window.location.reload();
+        } else {
+          setUser(jwtUser);
+        }
       }
     } catch (error) {}
   }, []);
 
-  const addToCart = useCallback(
-    (product, quantity) => {
-      dispatch({ type: "ADD_TO_CART", payload: { product, quantity } });
+  const addToCart = (product, quantity) => {
+    dispatch({ type: "ADD_TO_CART", payload: { product, quantity } });
 
-      addToCartMutation.mutate(
-        { id: product._id, quantity: quantity },
-        {
-          onError: () => {
-            toast.error("Something went wrong!");
-            const oldCart = JSON.parse(localStorage.getItem("cart") || "[]");
-            dispatch({ type: "SET_CART", payload: oldCart });
-          },
+    addToCartMutation.mutate(
+      { id: product._id, quantity: quantity },
+      {
+        onError: () => {
+          toast.error("Something went wrong!");
+          const oldCart = JSON.parse(localStorage.getItem("cart") || "[]");
+          dispatch({ type: "SET_CART", payload: oldCart });
         },
-      );
-    },
-    [cart, addToCartMutation],
-  );
+      },
+    );
+  };
 
-  const removeFromCart = useCallback(
-    (id) => {
-      const oldCart = JSON.parse(localStorage.getItem("cart") || "[]");
-      dispatch({ type: "REMOVE_FROM_CART", payload: { id } });
-      removeFromCartMutation.mutate(
-        { id },
-        {
-          onError: () => {
-            toast.error("Something went wrong!");
-            dispatch({ type: "SET_CART", payload: oldCart });
-          },
+  const removeFromCart = (id) => {
+    const oldCart = JSON.parse(localStorage.getItem("cart") || "[]");
+    dispatch({ type: "REMOVE_FROM_CART", payload: { id } });
+    removeFromCartMutation.mutate(
+      { id },
+      {
+        onError: () => {
+          toast.error("Something went wrong!");
+          dispatch({ type: "SET_CART", payload: oldCart });
         },
-      );
-    },
-    [removeFromCartMutation],
-  );
+      },
+    );
+  };
 
-  const updateCart = useCallback(
-    (type, id) => {
-      const oldCart = JSON.parse(localStorage.getItem("cart") || "[]");
-      dispatch({ type: "UPDATE_QUANTITY", payload: { type, id } });
+  const updateCart = (type, id) => {
+    const oldCart = JSON.parse(localStorage.getItem("cart") || "[]");
+    dispatch({ type: "UPDATE_QUANTITY", payload: { type, id } });
 
-      updateCartMutation.mutate(
-        { id, type },
-        {
-          onError: () => {
-            toast.error("Something went wrong!");
-            dispatch({ type: "SET_CART", payload: oldCart });
-          },
+    updateCartMutation.mutate(
+      { id, type },
+      {
+        onError: () => {
+          toast.error("Something went wrong!");
+          dispatch({ type: "SET_CART", payload: oldCart });
         },
-      );
-    },
-    [updateCartMutation],
-  );
+      },
+    );
+  };
 
-  const setCartWrapper = useCallback((newCartArray) => {
+  const setCartWrapper = (newCartArray) => {
     dispatch({ type: "SET_CART", payload: newCartArray });
-  }, []);
+  };
 
   return (
     <UserContext.Provider value={user}>

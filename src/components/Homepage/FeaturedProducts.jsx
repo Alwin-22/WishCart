@@ -1,16 +1,14 @@
 import React from "react";
 import "./FeaturedProducts.css";
 import ProductCard from "../Products/ProductCard";
-import useData from "../../hooks/useData"; // Adjust path if needed
+import useData from "../../hooks/useData";
 import ProductCardSkeleton from "../Products/ProductCardSkeleton";
 import { motion } from "motion/react";
-import { delay } from "motion";
 
 const FeaturedProducts = () => {
   const { data, error, isLoading } = useData("/products/featured", null, [
     "products",
     "featured",
-    10 * 60 * 60 * 1000,
   ]);
   const skeletons = [1, 2, 3];
 
@@ -38,12 +36,13 @@ const FeaturedProducts = () => {
         {data &&
           data.map((product, index) => (
             <motion.div
+              key={product._id}
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, ease: "easeInOut" }}
               viewport={{ once: true, amount: 0.3, delay: index * 0.25 }}
             >
-              <ProductCard key={product._id} product={product} />
+              <ProductCard product={product} />
             </motion.div>
           ))}
       </div>

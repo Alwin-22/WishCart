@@ -6,6 +6,7 @@ import useData from "../../hooks/useData";
 import Loader from "./../Common/Loader";
 import CartContext from "./../../contexts/CartContext";
 import UserContext from "../../contexts/UserContext";
+import { Helmet } from "react-helmet-async";
 
 const SingleProductPage = () => {
   const [selectedImage, setSelectedImage] = useState(0);
@@ -20,13 +21,23 @@ const SingleProductPage = () => {
     error,
     isLoading,
   } = useData(`/products/${id}`, null, ["products", id]);
+
   return (
     <section className="align_center single_product">
+      <Helmet>
+        <title>
+          {product?.title ? `WishCart - ${product.title}` : "WishCart"}
+        </title>
+        <meta
+          name="description"
+          content={product?.description || "Product details"}
+        />
+      </Helmet>
+
       {error && <em className="form_error">{error}</em>}
       {isLoading && <Loader />}
       {product && (
         <>
-          ,null
           <div className="align_center">
             <div className="single_product_thumbnails">
               {product.images.map((image, index) => (
@@ -50,7 +61,6 @@ const SingleProductPage = () => {
             <p className="single_product_price">${product.price.toFixed(2)}</p>
             {user && (
               <>
-                {" "}
                 <h2 className="quantity_title">Quantity:</h2>
                 <div className="align_center quantity_input">
                   <QuantityInput
