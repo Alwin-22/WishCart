@@ -13,11 +13,35 @@ const MyOrderPage = () => {
   } = useData("/order", null, ["myorders"], 1 * 60 * 1000);
 
   const getProductString = (order) => {
-    const productStringArr = order.products.map(
-      (p) => `${p.product.title}(${p.quantity})`,
-    );
-    return productStringArr.join(",");
+    if (!order || !Array.isArray(order.products)) return "";
+
+    return order.products
+      .filter((p) => p !== null && p !== undefined)
+      .map((p) => {
+        if (p.product && typeof p.product === "object" && p.product.title) {
+          return `${p.product.title}(${p.quantity ?? 0})`;
+        }
+
+        if (p.title) {
+          return `${p.title}(${p.quantity ?? 0})`;
+        }
+
+        if (p.product?.name) return `${p.product.name}(${p.quantity ?? 0})`;
+        if (p.name) return `${p.name}(${p.quantity ?? 0})`;
+
+        const properties = Object.keys(p).filter(
+          (k) => k !== "quantity" && k !== "_id",
+        );
+        if (p.product && typeof p.product === "object") {
+          const nestedProps = Object.keys(p.product).join(", ");
+          return `Nested keys: [${nestedProps}](${p.quantity ?? 0})`;
+        }
+
+        return `Item keys: [${properties.join(", ")}](${p.quantity ?? 0})`;
+      })
+      .join(", ");
   };
+
   return (
     <section className="align_center myorder_page">
       {isLoading && <Loader />}

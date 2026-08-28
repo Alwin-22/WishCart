@@ -11,14 +11,14 @@ import { toast } from "react-toastify";
 
 const CartPage = () => {
   const user = useContext(UserContext);
-
-  // 🟢 1. Extracted 'setCart' from context so it is defined for the checkout function
   const { cart, removeFromCart, updateCart, setCart } = useContext(CartContext);
 
   const subTotal = () => {
     let total = 0;
     cart.forEach((item) => {
-      total += item.product.price * item.quantity;
+      if (item.product) {
+        total += item.product.price * item.quantity;
+      }
     });
     return total;
   };
@@ -51,30 +51,35 @@ const CartPage = () => {
 
       <Table headings={["Item", "Price", "Quantity", "Total", "Remove"]}>
         <tbody>
-          {cart.map(({ product, quantity }) => (
-            <tr key={product._id}>
-              <td>{product.title}</td>
-              <td>${product.price}</td>
-              <td className="align_center table_quantity_input">
-                <QuantityInput
-                  quantity={quantity}
-                  stock={product.stock}
-                  setQuantity={updateCart}
-                  inCart={true}
-                  productId={product._id}
-                />
-              </td>
-              <td>${quantity * product.price}</td>
-              <td>
-                <img
-                  src={remove}
-                  alt="remove icon"
-                  className="cart_remove_icon"
-                  onClick={() => removeFromCart(product._id)}
-                />
-              </td>
-            </tr>
-          ))}
+          {cart.map((item) => {
+            if (!item || !item.product) return null;
+
+            const { product, quantity } = item;
+            return (
+              <tr key={product._id}>
+                <td>{product.title}</td>
+                <td>${product.price}</td>
+                <td className="align_center table_quantity_input">
+                  <QuantityInput
+                    quantity={quantity}
+                    stock={product.stock}
+                    setQuantity={updateCart}
+                    inCart={true}
+                    productId={product._id}
+                  />
+                </td>
+                <td>${quantity * product.price}</td>
+                <td>
+                  <img
+                    src={remove}
+                    alt="remove icon"
+                    className="cart_remove_icon"
+                    onClick={() => removeFromCart(product._id)}
+                  />
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </Table>
 
@@ -90,7 +95,7 @@ const CartPage = () => {
           </tr>
           <tr className="cart_bill_final">
             <td>Total</td>
-            <td>${subTotal > 0 ? subTotal + 5 : 0}</td>
+            <td>${subTotal() > 0 ? subTotal() + 5 : 0}</td>
           </tr>
         </tbody>
       </table>
